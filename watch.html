@@ -72,6 +72,35 @@ body { background: #080808; color: var(--text); font-family: 'DM Sans', sans-ser
 }
 .player-loading p { font-size: 13px; color: var(--muted); }
 
+/* Custom Mobile Full Screen Web API Override Overlay Button */
+.mobile-fs-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s;
+}
+.mobile-fs-btn:hover {
+  background: rgba(0, 0, 0, 0.85);
+}
+.mobile-fs-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
 /* ── TV SEASON SELECTOR ── */
 #season-bar {
   background: var(--surface);
@@ -246,15 +275,14 @@ footer a:hover { color: var(--red); }
   .movie-title { font-size: clamp(24px, 6vw, 40px); }
   .cast-pill { font-size: 11px; padding: 4px 10px; }
 
-  /* Fallback layout to preserve video tracking size ratio on smaller vertical displays */
   .player-frame-wrap {
     padding-top: 0;
     height: 32vh; 
   }
 
-  /* HARD DEVICE ROTATION OVERRIDE FOR FULLSCREEN EXPERIENCE */
+  /* HARD DEVICE ROTATION OVERRIDE */
   @media (orientation: landscape) {
-    .nav, #season-bar, .content-wrap, footer {
+    .nav, #season-bar, .content-wrap, footer, .mobile-fs-btn {
       display: none !important;
     }
     body {
@@ -269,6 +297,17 @@ footer a:hover { color: var(--red); }
     }
   }
 }
+
+/* Pseudo Fullscreen mode triggered via JS fallback for alternative mobile browsers */
+.player-frame-wrap.pseudo-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999999 !important;
+  padding-top: 0 !important;
+}
+
 @media (max-width: 400px) {
   .nav { padding: 10px 12px; }
 }
@@ -311,6 +350,7 @@ footer a:hover { color: var(--red); }
         <div class="spinner"></div>
         <p id="player-loading-msg">Connecting…</p>
       </div>
+      
       <iframe 
         id="player-iframe" 
         src=""
@@ -321,6 +361,11 @@ footer a:hover { color: var(--red); }
         playsinline
         style="opacity:0; transition:opacity .4s;">
       </iframe>
+
+      <button class="mobile-fs-btn" id="fs-toggle-btn" onclick="togglePlayerFullScreen()">
+        <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+        Fullscreen
+      </button>
     </div>
   </div>
 </div>
@@ -426,6 +471,49 @@ footer a:hover { color: var(--red); }
     return mediaType === 'tv'
       ? `https://multiembed.mov/?tmdb=1&video_id=${mediaId}&s=${currentSeason}&e=${currentEpisode}`
       : `https://multiembed.mov/?tmdb=1&video_id=${mediaId}`;
+  }
+
+  // FORCE CONTAINER LEVEL BROWSER WEB-API DRIVEN MOBILE FULLSCREEN FALLBACK
+  window.togglePlayerFullScreen = function() {
+    const container = document.getElementById('player-frame-wrap');
+    
+    if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+      // Enter Fullscreen mode
+      if (container.requestFullscreen) {
+        container.requestFullscreen();
+      } else if (container.webkitRequestFullscreen) {
+        container.webkitRequestFullscreen(); // Safari Mobile target match
+      } else if (container.mozRequestFullScreen) {
+        container.mozRequestFullScreen();
+      } else if (container.msRequestFullscreen) {
+        container.msRequestFullscreen();
+      } else {
+        // Absolute worst case: toggle pseudo fullscreen styling
+        container.classList.add('pseudo-fullscreen');
+      }
+    } else {
+      // Exit Fullscreen mode
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+      container.classList.remove('pseudo-fullscreen');
+    }
+  };
+
+  // Monitor fullscreen exit events to clean up styling states if triggered by hardware gestures
+  document.addEventListener('fullscreenchange', handleFsChange);
+  document.addEventListener('webkitfullscreenchange', handleFsChange);
+  function handleFsChange() {
+    const isFs = document.fullscreenElement || document.webkitFullscreenElement;
+    if(!isFs) {
+      document.getElementById('player-frame-wrap').classList.remove('pseudo-fullscreen');
+    }
   }
 
   async function loadPlayer() {
