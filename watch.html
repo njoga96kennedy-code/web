@@ -467,10 +467,11 @@ footer a:hover { color: var(--red); }
   let currentEpisode = 1;
   let mediaData      = null;
 
+  // UPDATED: Now queries VidLink.pro endpoint routes natively
   function buildSrc() {
     return mediaType === 'tv'
-      ? `https://multiembed.mov/?tmdb=1&video_id=${mediaId}&s=${currentSeason}&e=${currentEpisode}`
-      : `https://multiembed.mov/?tmdb=1&video_id=${mediaId}`;
+      ? `https://vidlink.pro/tv/${mediaId}/${currentSeason}/${currentEpisode}`
+      : `https://vidlink.pro/movie/${mediaId}`;
   }
 
   // FORCE CONTAINER LEVEL BROWSER WEB-API DRIVEN MOBILE FULLSCREEN FALLBACK
@@ -478,21 +479,18 @@ footer a:hover { color: var(--red); }
     const container = document.getElementById('player-frame-wrap');
     
     if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-      // Enter Fullscreen mode
       if (container.requestFullscreen) {
         container.requestFullscreen();
       } else if (container.webkitRequestFullscreen) {
-        container.webkitRequestFullscreen(); // Safari Mobile target match
+        container.webkitRequestFullscreen(); 
       } else if (container.mozRequestFullScreen) {
         container.mozRequestFullScreen();
       } else if (container.msRequestFullscreen) {
         container.msRequestFullscreen();
       } else {
-        // Absolute worst case: toggle pseudo fullscreen styling
         container.classList.add('pseudo-fullscreen');
       }
     } else {
-      // Exit Fullscreen mode
       if (document.exitFullscreen) {
         document.exitFullscreen();
       } else if (document.webkitExitFullscreen) {
@@ -506,7 +504,6 @@ footer a:hover { color: var(--red); }
     }
   };
 
-  // Monitor fullscreen exit events to clean up styling states if triggered by hardware gestures
   document.addEventListener('fullscreenchange', handleFsChange);
   document.addEventListener('webkitfullscreenchange', handleFsChange);
   function handleFsChange() {
