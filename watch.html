@@ -50,7 +50,7 @@ body { background: #080808; color: var(--text); font-family: 'DM Sans', sans-ser
 }
 .player-frame-wrap {
   position: relative;
-  padding-top: 56.25%; /* 16:9 */
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
   background: #000;
 }
 .player-frame-wrap iframe {
@@ -239,13 +239,35 @@ footer a:hover { color: var(--red); }
 @media (max-width: 600px) {
   .nav { padding: 12px 14px; }
   .player-container { max-width: 100%; }
-  /* Remove page margin gutters so the player expands right to the screen edge */
   .player-wrap { margin-left: 0; margin-right: 0; }
   .content-wrap { padding: 16px 14px 32px; }
   .season-inner { padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
   footer { padding: 14px 16px; }
   .movie-title { font-size: clamp(24px, 6vw, 40px); }
   .cast-pill { font-size: 11px; padding: 4px 10px; }
+
+  /* Fallback layout to preserve video tracking size ratio on smaller vertical displays */
+  .player-frame-wrap {
+    padding-top: 0;
+    height: 32vh; 
+  }
+
+  /* HARD DEVICE ROTATION OVERRIDE FOR FULLSCREEN EXPERIENCE */
+  @media (orientation: landscape) {
+    .nav, #season-bar, .content-wrap, footer {
+      display: none !important;
+    }
+    body {
+      overflow: hidden;
+    }
+    .player-wrap, .player-container, .player-frame-wrap {
+      position: fixed;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 999999 !important;
+    }
+  }
 }
 @media (max-width: 400px) {
   .nav { padding: 10px 12px; }
@@ -289,7 +311,16 @@ footer a:hover { color: var(--red); }
         <div class="spinner"></div>
         <p id="player-loading-msg">Connecting…</p>
       </div>
-      <iframe id="player-iframe" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen" playsinline style="opacity:0;transition:opacity .4s;"></iframe>
+      <iframe 
+        id="player-iframe" 
+        src=""
+        allow="autoplay; fullscreen; picture-in-picture" 
+        allowfullscreen="true" 
+        webkitallowfullscreen="true" 
+        mozallowfullscreen="true" 
+        playsinline
+        style="opacity:0; transition:opacity .4s;">
+      </iframe>
     </div>
   </div>
 </div>
