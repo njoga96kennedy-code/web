@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Watch – Cinema Nest</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -72,50 +72,6 @@ body { background: #080808; color: var(--text); font-family: 'DM Sans', sans-ser
 }
 .player-loading p { font-size: 13px; color: var(--muted); }
 
-
-/* ── SUBTITLE OVERLAY ── */
-#subtitle-overlay {
-  position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%);
-  width: 90%; text-align: center; pointer-events: none; z-index: 10;
-}
-#subtitle-text {
-  display: inline-block;
-  background: rgba(0,0,0,.75); color: #fff;
-  font-size: clamp(14px, 2vw, 20px); font-weight: 500; line-height: 1.5;
-  padding: 4px 12px; border-radius: 4px;
-  white-space: pre-line; max-width: 100%;
-  text-shadow: 0 1px 3px rgba(0,0,0,.9);
-}
-#subtitle-text:empty { display: none; }
-
-/* ── SUBTITLE BAR ── */
-.subtitle-bar {
-  background: var(--surface);
-  border-bottom: 1px solid rgba(255,255,255,.06);
-}
-.subtitle-inner {
-  max-width: 1200px; margin: 0 auto;
-  padding: 10px 24px;
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-}
-.sub-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-right: 4px; }
-.sub-select {
-  background: var(--surface2); border: 1px solid rgba(255,255,255,.12);
-  color: #fff; font-family: inherit; font-size: 13px;
-  padding: 6px 28px 6px 12px; border-radius: 6px; cursor: pointer; outline: none;
-  appearance: none; -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center;
-}
-.sub-toggle {
-  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
-  color: var(--muted); font-size: 12px; font-family: inherit; font-weight: 600;
-  padding: 5px 14px; border-radius: 20px; cursor: pointer; transition: all .2s;
-}
-.sub-toggle:hover { background: rgba(255,255,255,.12); color: #fff; }
-.sub-toggle.active { background: var(--red); border-color: var(--red); color: #fff; }
-.sub-status { font-size: 11px; color: rgba(255,255,255,.25); margin-left: 4px; }
-
 /* ── TV SEASON SELECTOR ── */
 #season-bar {
   background: var(--surface);
@@ -137,18 +93,6 @@ body { background: #080808; color: var(--text); font-family: 'DM Sans', sans-ser
   background-repeat: no-repeat; background-position: right 10px center;
   padding-right: 28px;
 }
-.episode-grid {
-  max-width: 1200px; margin: 0 auto;
-  padding: 0 24px 16px;
-  display: flex; gap: 8px; flex-wrap: wrap;
-}
-.ep-btn {
-  background: var(--surface2); border: 1px solid rgba(255,255,255,.08);
-  color: var(--muted); font-size: 12px; font-family: inherit;
-  padding: 5px 13px; border-radius: 4px; cursor: pointer; transition: all .2s;
-}
-.ep-btn:hover { background: rgba(255,255,255,.12); color: #fff; }
-.ep-btn.active { background: var(--red); border-color: var(--red); color: #fff; }
 
 /* ── CONTENT BELOW PLAYER ── */
 .content-wrap {
@@ -237,7 +181,7 @@ body { background: #080808; color: var(--text); font-family: 'DM Sans', sans-ser
   backdrop-filter: blur(8px);
   align-items: center; justify-content: center;
 }
-/* Auth loading — covers everything until Firebase resolves session */
+/* Auth loading */
 #auth-loading {
   position: fixed; inset: 0; background: #080808;
   z-index: 9999; display: flex; align-items: center; justify-content: center;
@@ -291,9 +235,12 @@ footer p { font-size: 11px; color: rgba(255,255,255,.25); line-height: 1.6; max-
 footer a { font-size: 11px; color: rgba(255,255,255,.3); text-decoration: none; transition: color .2s; }
 footer a:hover { color: var(--red); }
 
-/* ── MOBILE ── */
+/* ── MOBILE / SMARTPHONE OPTIMIZATIONS ── */
 @media (max-width: 600px) {
   .nav { padding: 12px 14px; }
+  .player-container { max-width: 100%; }
+  /* Remove page margin gutters so the player expands right to the screen edge */
+  .player-wrap { margin-left: 0; margin-right: 0; }
   .content-wrap { padding: 16px 14px 32px; }
   .season-inner { padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
   footer { padding: 14px 16px; }
@@ -307,7 +254,6 @@ footer a:hover { color: var(--red); }
 </head>
 <body>
 
-<!-- NAV -->
 <nav class="nav">
   <a href="index.html" class="logo" style="display:flex;align-items:center;">
     <svg width="150" height="38" viewBox="0 0 170 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
@@ -336,7 +282,6 @@ footer a:hover { color: var(--red); }
   </div>
 </nav>
 
-<!-- PLAYER -->
 <div class="player-wrap">
   <div class="player-container">
     <div class="player-frame-wrap" id="player-frame-wrap">
@@ -344,25 +289,11 @@ footer a:hover { color: var(--red); }
         <div class="spinner"></div>
         <p id="player-loading-msg">Connecting…</p>
       </div>
-      <iframe id="player-iframe" allowfullscreen allow="autoplay; fullscreen" style="opacity:0;transition:opacity .4s;"></iframe>
-      <div id="subtitle-overlay"><span id="subtitle-text"></span></div>
+      <iframe id="player-iframe" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen" playsinline style="opacity:0;transition:opacity .4s;"></iframe>
     </div>
   </div>
 </div>
 
-<!-- SUBTITLE BAR -->
-<div class="subtitle-bar" id="subtitle-bar">
-  <div class="subtitle-inner">
-    <span class="sub-label">Subtitles</span>
-    <select class="sub-select" id="sub-lang-select" onchange="onSubLangChange()">
-      <option value="">Loading…</option>
-    </select>
-    <button class="sub-toggle" id="sub-toggle" onclick="toggleSubtitles()">CC Off</button>
-    <span class="sub-status" id="sub-status"></span>
-  </div>
-</div>
-
-<!-- TV SEASON / EPISODE BAR -->
 <div id="season-bar">
   <div class="season-inner">
     <span class="season-label">Season</span>
@@ -372,10 +303,8 @@ footer a:hover { color: var(--red); }
   </div>
 </div>
 
-<!-- CONTENT -->
 <div class="content-wrap fade-in" id="content-wrap">
 
-  <!-- MAIN -->
   <div id="main-info">
     <div class="skeleton" style="height:44px;width:60%;margin-bottom:14px;"></div>
     <div class="skeleton" style="height:18px;width:40%;margin-bottom:20px;"></div>
@@ -389,7 +318,6 @@ footer a:hover { color: var(--red); }
     </div>
   </div>
 
-  <!-- SIDEBAR -->
   <div id="sidebar">
     <div class="sidebar-title">More Like This</div>
     <div class="related-list" id="related-list">
@@ -406,12 +334,10 @@ footer a:hover { color: var(--red); }
 
 </div>
 
-<!-- AUTH LOADING — hides content until Firebase resolves -->
 <div id="auth-loading">
   <div class="spinner"></div>
 </div>
 
-<!-- PAYWALL -->
 <div id="paywall">
   <div class="paywall-box">
     <div class="paywall-icon">
@@ -427,7 +353,6 @@ footer a:hover { color: var(--red); }
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
   <p>This site does not store any files on our server. We only link to media which is hosted on third-party services.</p>
   <a href="mailto:contact@cinemanest">contact@cinemanest</a>
@@ -451,10 +376,8 @@ footer a:hover { color: var(--red); }
   const auth = getAuth(app);
   const db   = getFirestore(app);
 
-  // Persist session across page reloads (localStorage, not sessionStorage)
   setPersistence(auth, browserLocalPersistence).catch(() => {});
 
-  // ── Config ──
   const API_KEY = '1d3ae144acfb6bfcb25f70361cedcf29';
   const API     = 'https://api.themoviedb.org/3';
   const IMG     = 'https://image.tmdb.org/t/p/original';
@@ -462,14 +385,12 @@ footer a:hover { color: var(--red); }
 
   const params = new URLSearchParams(window.location.search);
   const mediaId   = params.get('id');
-  const mediaType = params.get('type') || 'movie'; // 'movie' | 'tv'
+  const mediaType = params.get('type') || 'movie';
 
   let currentSeason  = 1;
   let currentEpisode = 1;
   let mediaData      = null;
 
-  // ── Player source — SuperEmbed ──
-  // https://www.superembed.stream/ — request by TMDB id, &tmdb=1 required.
   function buildSrc() {
     return mediaType === 'tv'
       ? `https://multiembed.mov/?tmdb=1&video_id=${mediaId}&s=${currentSeason}&e=${currentEpisode}`
@@ -491,7 +412,6 @@ footer a:hover { color: var(--red); }
     const src = buildSrc();
     iframe.src = src;
 
-    // onload fires on navigation — dismiss spinner
     iframe.onload = () => {
       clearInterval(window._msgCycle);
       clearTimeout(window._playerLoadTimeout);
@@ -499,7 +419,6 @@ footer a:hover { color: var(--red); }
       iframe.style.opacity = '1';
     };
 
-    // Hard fallback — always show player after 8s
     window._playerLoadTimeout = setTimeout(() => {
       clearInterval(window._msgCycle);
       loading.style.display = 'none';
@@ -507,11 +426,9 @@ footer a:hover { color: var(--red); }
     }, 8000);
   }
 
-  // ── TV: populate season/episode dropdowns ──
   async function loadTVSeasons(totalSeasons) {
     const seasonBar    = document.getElementById('season-bar');
     const seasonSelect = document.getElementById('season-select');
-    const episodeSelect = document.getElementById('episode-select');
     seasonBar.style.display = 'block';
 
     seasonSelect.innerHTML = '';
@@ -551,14 +468,9 @@ footer a:hover { color: var(--red); }
 
   window.loadEpisode = () => {
     currentEpisode = parseInt(document.getElementById('episode-select').value);
-    subCues = [];
-    clearInterval(subTimer);
-    document.getElementById('subtitle-text').textContent = '';
-    loadSubtitleList();
     loadPlayer();
   };
 
-  // ── Save watch history to Firestore ──
   async function saveWatchHistory(user) {
     if (!mediaData) return;
     try {
@@ -570,12 +482,10 @@ footer a:hover { color: var(--red); }
         backdrop: mediaData.backdrop_path || '',
         watchedAt: serverTimestamp(),
       }, { merge: true });
-    } catch (e) { /* silent fail */ }
+    } catch (e) { }
   }
 
-  // ── Fetch metadata ──
   async function loadMetadata() {
-    // Start the player immediately — auto-detect working server
     if (mediaType !== 'tv') {
       loadPlayer();
     }
@@ -584,7 +494,6 @@ footer a:hover { color: var(--red); }
       const res  = await fetch(`${API}/${mediaType}/${mediaId}?api_key=${API_KEY}&append_to_response=credits,similar`);
       mediaData  = await res.json();
 
-      // Title
       const title   = mediaData.title || mediaData.name || '';
       const year    = (mediaData.release_date || mediaData.first_air_date || '').slice(0, 4);
       const rating  = mediaData.vote_average ? mediaData.vote_average.toFixed(1) : null;
@@ -600,7 +509,6 @@ footer a:hover { color: var(--red); }
 
       document.title = `${title} – Cinema Nest`;
 
-      // ── Render main info ──
       const mainEl = document.getElementById('main-info');
       mainEl.innerHTML = `
         <h1 class="movie-title">${title}</h1>
@@ -624,16 +532,10 @@ footer a:hover { color: var(--red); }
           </div>` : ''}
       `;
 
-      // ── TV: load season bar ──
       if (mediaType === 'tv' && mediaData.number_of_seasons) {
         await loadTVSeasons(mediaData.number_of_seasons);
       }
-      // (movies: player already started loading above)
 
-      // ── Load subtitle list ──
-      loadSubtitleList();
-
-      // ── Render related ──
       const relatedEl = document.getElementById('related-list');
       if (similar.length) {
         relatedEl.innerHTML = similar.map(item => {
@@ -664,137 +566,6 @@ footer a:hover { color: var(--red); }
     }
   }
 
-  // ── SUBTITLES ──
-  let subEnabled   = false;
-  let subCues      = [];   // [{start, end, text}]
-  let subTimer     = null;
-  let subCurrentLang = 'en';
-  let subElapsed   = 0;    // seconds elapsed since player loaded
-  let subClockStart = null;
-
-  // Parse WebVTT text into cue array
-  function parseVTT(text) {
-    const cues = [];
-    const blocks = text.replace(/\r\n/g, '\n').split(/\n\n+/);
-    const timeRe = /(\d{1,2}):(\d{2}):(\d{2})[.,](\d{3})\s*-->\s*(\d{1,2}):(\d{2}):(\d{2})[.,](\d{3})/;
-    blocks.forEach(block => {
-      const lines = block.trim().split('\n');
-      const ti = lines.findIndex(l => timeRe.test(l));
-      if (ti === -1) return;
-      const m = lines[ti].match(timeRe);
-      const toSec = (h,min,s,ms) => +h*3600 + +min*60 + +s + +ms/1000;
-      cues.push({
-        start: toSec(m[1],m[2],m[3],m[4]),
-        end:   toSec(m[5],m[6],m[7],m[8]),
-        text:  lines.slice(ti+1).join('\n').replace(/<[^>]+>/g,'').trim()
-      });
-    });
-    return cues;
-  }
-
-  // Fetch available subtitle languages then load default
-  async function loadSubtitleList() {
-    const sel = document.getElementById('sub-lang-select');
-    const status = document.getElementById('sub-status');
-    sel.innerHTML = '<option value="">Loading…</option>';
-    try {
-      // subtitles.quest: free CORS-enabled subtitle API keyed by TMDB id
-      const endpoint = mediaType === 'tv'
-        ? `https://subtitles.quest/api/v1/subtitles/episode/?tmdb_id=${mediaId}&season_number=${currentSeason}&episode_number=${currentEpisode}&format=vtt`
-        : `https://subtitles.quest/api/v1/subtitles/movie/?tmdb_id=${mediaId}&format=vtt`;
-      const res = await fetch(endpoint);
-      if (!res.ok) throw new Error('No subtitles');
-      const data = await res.json();
-      const subs = data.results || data;
-      if (!subs.length) throw new Error('Empty');
-
-      // Deduplicate by language, prefer English
-      const seen = {};
-      const opts = [];
-      subs.forEach(s => {
-        const code = s.language || s.lang || 'xx';
-        if (!seen[code]) { seen[code] = true; opts.push({ code, url: s.url || s.file_path, label: s.language_name || code }); }
-      });
-
-      sel.innerHTML = opts.map(o => `<option value="${o.url}">${o.label}</option>`).join('');
-      // Prefer English
-      const enOpt = opts.find(o => o.code === 'en' || o.code === 'English');
-      if (enOpt) sel.value = enOpt.url;
-      status.textContent = `${opts.length} language${opts.length !== 1 ? 's' : ''} available`;
-    } catch {
-      sel.innerHTML = '<option value="">No subtitles found</option>';
-      status.textContent = 'No subtitles available for this title';
-    }
-  }
-
-  async function fetchAndActivateSubs(url) {
-    const status = document.getElementById('sub-status');
-    if (!url) return;
-    try {
-      status.textContent = 'Loading subtitles…';
-      const res = await fetch(url);
-      if (!res.ok) throw new Error();
-      const text = await res.text();
-      subCues = parseVTT(text);
-      status.textContent = subCues.length ? `${subCues.length} cues loaded` : 'No cues found';
-      startSubClock();
-    } catch {
-      status.textContent = 'Could not load subtitle file';
-    }
-  }
-
-  // Clock: approximate playback position by counting real seconds since load
-  function startSubClock() {
-    clearInterval(subTimer);
-    if (!subEnabled || !subCues.length) return;
-    subClockStart = Date.now();
-    subElapsed = 0;
-    subTimer = setInterval(() => {
-      subElapsed = (Date.now() - subClockStart) / 1000;
-      renderSubtitle(subElapsed);
-    }, 100);
-  }
-
-  function renderSubtitle(t) {
-    const el = document.getElementById('subtitle-text');
-    const cue = subCues.find(c => t >= c.start && t <= c.end);
-    el.textContent = cue ? cue.text : '';
-  }
-
-  window.toggleSubtitles = () => {
-    subEnabled = !subEnabled;
-    const btn = document.getElementById('sub-toggle');
-    btn.textContent = subEnabled ? 'CC On' : 'CC Off';
-    btn.classList.toggle('active', subEnabled);
-    if (subEnabled) {
-      const url = document.getElementById('sub-lang-select').value;
-      if (subCues.length) { startSubClock(); }
-      else if (url) { fetchAndActivateSubs(url); }
-    } else {
-      clearInterval(subTimer);
-      document.getElementById('subtitle-text').textContent = '';
-    }
-  };
-
-  window.onSubLangChange = () => {
-    subCues = [];
-    clearInterval(subTimer);
-    document.getElementById('subtitle-text').textContent = '';
-    if (subEnabled) {
-      const url = document.getElementById('sub-lang-select').value;
-      if (url) fetchAndActivateSubs(url);
-    }
-  };
-
-  // Reset subtitles when source/episode changes
-  const _origLoadPlayer = loadPlayer;
-  // Patch loadPlayer to also reset the sub clock
-  const _origBuildSrc = buildSrc;
-  // Hook into iframe onload to restart clock
-  document.getElementById('player-iframe').addEventListener('load', () => {
-    if (subEnabled && subCues.length) startSubClock();
-  });
-
   window.toggleOverview = () => {
     const el  = document.getElementById('overview-text');
     const btn = document.getElementById('read-more-btn');
@@ -807,10 +578,6 @@ footer a:hover { color: var(--red); }
     }
   };
 
-  // ── Handle ?paid=1 redirect from Selar (legacy local-only flag) ──
-  // Note: the authoritative activation path is activate.html, which writes
-  // to Firestore with the correct plan length. This is just a local-only
-  // fallback, kept plan-aware via an optional ?plan= param (1m/3m/6m/12m).
   (function() {
     const up = new URLSearchParams(window.location.search);
     if (up.get('paid') === '1') {
@@ -826,12 +593,10 @@ footer a:hover { color: var(--red); }
     }
   })();
 
-  // ── Status pill in nav ──
   function renderStatusPill() {
     const pill = document.getElementById('watch-status-pill');
     if (!pill) return;
 
-    // ── Free trial (check first) ──
     const saved = localStorage.getItem('cinemanest-trial');
     if (saved) {
       try {
@@ -846,7 +611,6 @@ footer a:hover { color: var(--red); }
       } catch {}
     }
 
-    // ── Paid subscriber ──
     if (localStorage.getItem('cinemanest-paid') === 'true') {
       let label = 'Subscribed';
       const subSaved = localStorage.getItem('cinemanest-sub');
@@ -866,8 +630,6 @@ footer a:hover { color: var(--red); }
   }
   renderStatusPill();
 
-  // ── Auth gate ──
-  // Safety timeout — if Firebase doesn't respond in 3s, show paywall
   const authTimeout = setTimeout(() => {
     const loading = document.getElementById('auth-loading');
     if (loading && loading.style.display !== 'none') {
@@ -894,7 +656,6 @@ footer a:hover { color: var(--red); }
     const authLoading = document.getElementById('auth-loading');
     if (authLoading) authLoading.style.display = 'none';
 
-    // Paid subscribers — bypass all gates
     if (localStorage.getItem('cinemanest-paid') === 'true') {
       if (mediaId) {
         await loadMetadata();
@@ -919,26 +680,21 @@ footer a:hover { color: var(--red); }
       if (snap.exists()) {
         const data = snap.data();
 
-        // ── Active paid subscription ──
         if (data.plan === 'active' && data.subscriptionEnd) {
           const expired = new Date(data.subscriptionEnd) <= new Date();
           if (expired) {
             showExpiredPaywall('Subscription Expired', 'Your subscription has ended. Renew now to keep watching.');
           } else {
-            // Valid subscriber — set local flag and allow access
             localStorage.setItem('cinemanest-paid', 'true');
             return;
           }
         }
-        // ── Free trial ──
         else if (data.trialEnd) {
           const expired = new Date(data.trialEnd) <= new Date();
           if (expired) {
             showExpiredPaywall('Trial Expired', 'Your free trial has ended. Subscribe now to keep watching unlimited movies and shows.');
           }
-          // else trial still active — allow access (no paywall shown)
         }
-        // ── No plan at all ──
         else {
           showExpiredPaywall('Subscription Required', 'Subscribe to Cinema Nest to watch movies and shows.');
         }
@@ -973,7 +729,6 @@ footer a:hover { color: var(--red); }
     box.appendChild(homeBtn);
     pw.style.display = 'flex';
   }
-
 </script>
 </body>
 </html>
